@@ -18,6 +18,7 @@
 #include <sys/mman.h>
 #include <unistd.h>
 #include <sys/epoll.h>
+#include <pthread.h>
 #include "lept_http.h"
 #include "../lept_utils/lept_utils.h"
 #include "../lept_epoll/lept_epoll.h"
@@ -174,24 +175,28 @@ void process_request(void *argp)
 
     for (;;)
     {
+        debug("Thread %lu reading something...", pthread_self());
         size_t remain_size = MIN(MAXBUF - (request->last - request->pos) - 1, MAXBUF - request->last % MAXBUF);
         CHECK(remain_size > 0, "Empty buffer for request.");
         char *plast = &request->buf[(request->last)%MAXBUF];
+        debug("Thread %lu step into read...", pthread_self());
         ssize_t n = read(fd, plast, remain_size);
+        debug("Thread %lu return from read...", pthread_self());
 
-        if (n == 0)  // EOF 表示客户端已经关闭了连接
+        if (n == 0)  // EOF 表示客户端已经关闭了连接（测试时为什么有种读不到EOF的感觉）
         {
-            log_info("Finish read client");
-            should_close = 1;  // 如果这里不关闭会怎么样？
+            debug("Read EOF, Finish read client");
+            should_close = 1;
             break;
         }
         if (n < 0)
         {
             if (errno != EAGAIN)
             {
-                log_info("Error when read client, closed.");
+                log_info("thread: %lu, Error when read client, closed.", pthread_self());
                 should_close = 1;
             }
+            debug("thread: %lu, No data to read, break.", pthread_self());
             break;  // EAGAIN 表示暂时无数据可读，跳出循环等待下一次fd可读
         }
 
@@ -204,8 +209,12 @@ void process_request(void *argp)
         {
             client_error(fd, "", "400", "Invalid Request", "LeptServer can't understand request");
             should_close = 1;
+            log_info("Client error");
             break;
         }
+
+        debug("method == %.*s", (int) (request->method_end - request->method_start), request->method_start);
+        debug("uri == %.*s", (int) (request->uri_end - request->uri_start), request->uri_start);
 
         rc = lept_parse_request_header(request);  // 解析请求报头
         if (rc == EAGAIN)
@@ -219,7 +228,7 @@ void process_request(void *argp)
         }
         char filename[MAXLINE], cgiargs[MAXLINE];
         int is_static = parse_uri(request->uri_start, (int) (request->uri_end - request->uri_start), filename, cgiargs);
-        log_info("Request filename: %s\n", filename);
+        debug("Request filename: %s\n", filename);
         struct stat sbuf;
         if (stat(filename, &sbuf) < 0)
         {
@@ -251,10 +260,12 @@ void process_request(void *argp)
 
             if (!out->keep_alive)
             {
+                debug("No keep-alive, will close socket");
                 should_close = 1;
                 free(out);
                 break;
             }
+            should_close = 1;  // TODO 由于暂时没加定时器，所以这里需要手动关闭，等于是should_close没有用o(╯□╰)o
             free(out);
         }
         else
@@ -265,11 +276,14 @@ void process_request(void *argp)
     // 需要分是读完数据还是还是没读完数据或者是keep-alive来做不同的处理
     if (should_close)
     {
-        close(request->fd);  // 关闭描述符之后会自动从epoll的描述符集合中移除
+        debug("Close socket.");
+        lept_epoll_del(request->epfd, request->fd, NULL);
+        close(request->fd);  // 关闭描述符之后会自动从epoll的描述符集合中移除（因为没有做dup之类的操作）
         free(request);
     }
     else
     {
+        debug("Can't close socket, readd to epoll");
         struct epoll_event event;
         event.data.ptr = argp;
         event.events = EPOLLIN | EPOLLET | EPOLLONESHOT;
@@ -666,7 +680,7 @@ int parse_uri(char *uri, int uri_length, char *filename, char *cgiargs)
     if (!strstr(uri, "cgi-bin"))
     {
         strcpy(cgiargs, "");
-        strcpy(filename, ".");
+        strcpy(filename, WORKDIR);
         strcat(filename, uri);
         if (uri[strlen(uri) - 1] == '/')
             strcat(filename, "home.html");

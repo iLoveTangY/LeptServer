@@ -27,6 +27,8 @@
 
 #define DEFAULT_TIMEOUT 500  /* ms */
 
+#define WORKDIR "/home/tang/CLionProjects/LeptServer"
+
 enum SHUTDOWN_T
 {
     GRACEFUL_SHUTDWON,
