@@ -41,7 +41,7 @@ int lept_threadpool_init(lept_thread_pool_t* pool, int thread_num)
         pool->thread_count++;
         pool->started++;
 
-        log_info("Thread id: %d created\n", (int)*((pool->threads) + i));
+        log_info("Thread id: %lu created\n", *((pool->threads) + i));
     }
 
     return 0;
@@ -69,6 +69,7 @@ int lept_threadpool_add(lept_thread_pool_t *pool, void (*p_function)(void *), vo
 
     pool->queue_size++;
 
+    debug("Main Thread: send signal to cond variable");
     rc = pthread_cond_signal(&(pool->cond));
     CHECK(rc == 0, "Error in pthread_cond_signal.");
 
@@ -150,6 +151,7 @@ static void *thread(void *argp)
         while ((pool->queue_size == 0) && !(pool->shutdown))
         {
             // TODO 判断返回值
+            debug("Thread %lu Waiting for cond...", pthread_self());
             pthread_cond_wait((&pool->cond), &(pool->lock));
         }
 
@@ -161,17 +163,19 @@ static void *thread(void *argp)
         lept_task_t *task = pool->head->next;
         assert(task != NULL);
 
+        debug("Thread %lu can do something...", pthread_self());
         pool->head->next = task->next;
         --(pool->queue_size);
 
         pthread_mutex_unlock(&(pool->lock)); // TODO
 
         (*(task->p_function))(task->args);
+        debug("Thread %lu finish task...", pthread_self());
         free(task);
     }
 
     pool->started--;
     pthread_mutex_unlock(&(pool->lock));  // 从循环中跳出必须解锁
-    fprintf(stdout, "Thread id %d exit.\n", (int)pthread_self());
+    fprintf(stdout, "Thread id %lu exit.\n", pthread_self());
     pthread_exit(NULL);
 }
