@@ -74,7 +74,7 @@ int lept_open_listenfd(const char *port)
 int lept_make_fd_unblocked(int fd)
 {
     int flags = fcntl(fd, F_GETFL, 0);
-    CHECK(flags >= 0, "Error in fcntl");
+    CHECK(flags >= 0, "Error in fcntl, fd = %d", fd);
 
     flags |= O_NONBLOCK;
     int s = fcntl(fd, F_SETFL, flags);
