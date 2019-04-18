@@ -8,6 +8,7 @@
 #include <errno.h>
 #include "lept_utils.h"
 #include "../lept_definition.h"
+#include "../log.h"
 
 handler_t *lept_signal(int signo, handler_t *p_func)
 {
@@ -26,16 +27,15 @@ int lept_open_listenfd(const char *port)
 {
     struct addrinfo hints, *listp, *p;
     int listenfd = -1, optval = 1;
+    int rc;
 
     /* Get a list of potential server addresses */
     memset(&hints, 0, sizeof(struct addrinfo));
     hints.ai_socktype = SOCK_STREAM;             /* Accept connections */
     hints.ai_flags = AI_PASSIVE | AI_ADDRCONFIG; /* ... on any IP address */
     hints.ai_flags |= AI_NUMERICSERV;            /* ... using port number */
-    if (getaddrinfo(NULL, port, &hints, &listp) != 0)
-    {
-        return -2;
-    }
+    rc = getaddrinfo(NULL, port, &hints, &listp);
+    CHECK(rc == 0, "Error in getaddrinfo");
 
     /* Walk the list for one that we can bind to */
     for (p = listp; p; p = p->ai_next)
@@ -51,23 +51,17 @@ int lept_open_listenfd(const char *port)
         /* Bind the descriptor to the address */
         if (bind(listenfd, p->ai_addr, p->ai_addrlen) == 0)
             break; /* Success */
-        if (close(listenfd) < 0)
-        { /* Bind failed, try the next */
-            return -1;
-        }
+        rc = close(listenfd);
+        CHECK(rc >= 0, "Error when close listen fd");
     }
 
     /* Clean up */
     freeaddrinfo(listp);
-    if (!p) /* No address worked */
-        return -1;
+    CHECK(p != NULL, "No address worked");
 
     /* Make it a listening socket ready to accept connection requests */
-    if (listen(listenfd, LISTENQ) < 0)
-    {
-        close(listenfd);
-        return -1;
-    }
+    rc = listen(listenfd, LISTENQ);
+    CHECK(rc >= 0, "Error when make listening socket");
     return listenfd;
 }
 
