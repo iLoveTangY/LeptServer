@@ -1,4 +1,4 @@
-cmake_build-debug/
+cmake-build-debug/
 request
 *.o
 .idea/
