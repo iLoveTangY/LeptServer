@@ -44,6 +44,8 @@ typedef struct lept_http_request
 
     int state;
 
+    void *p_timer_node;
+
     lept_head_list_t *head;  // 链表存储header
 } lept_http_request_t;
 
@@ -55,6 +57,8 @@ typedef struct lept_http_header_out
 
     int status;
 } lept_http_header_out_t;
+
+int lept_http_close_connection(lept_http_request_t *);
 
 int lept_http_request_init(lept_http_request_t *request, int epfd, int fd);
 

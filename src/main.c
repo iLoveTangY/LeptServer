@@ -12,8 +12,11 @@
 #include "lept_epoll/lept_epoll.h"
 #include "lept_threadpool/lept_thread_pool.h"
 #include "lept_http/lept_http.h"
+#include "lept_timer/lept_timer.h"
 
 static runtime_context_t context;
+
+lept_server_timers_t sys_timers;
 
 static void usage()
 {
@@ -86,6 +89,7 @@ int main(int argc, char **argv)
     lept_http_request_t *r = (lept_http_request_t *)malloc(sizeof(lept_http_request_t));
     CHECK(r != NULL, "erro in malloc http request");
 
+    lept_server_timer_init(&sys_timers);
     lept_http_request_init(r, epfd, listenfd);
 
     lept_epoll_event event;
@@ -106,8 +110,11 @@ int main(int argc, char **argv)
     for(;;)
     {
         debug("Main thread: wating for new connection...");
-        int nfd = lept_epoll_wait(epfd, events, MAXEVENTS, -1);
+        int time = get_epoll_wait_time(&sys_timers);
+        int nfd = lept_epoll_wait(epfd, events, MAXEVENTS, time);
+        handle_expire_timers(&sys_timers);  // 处理超时连接
         debug("Main thread: %d fd is ready, epfd is %d...", nfd, epfd);
+
         for (int i = 0; i < nfd; ++i)
         {
             r = (lept_http_request_t *)(events[i].data.ptr);
@@ -147,6 +154,7 @@ int main(int argc, char **argv)
                     event.events = EPOLLIN | EPOLLET | EPOLLONESHOT;
                     debug("Main thread: add a new connection(fd is %d) to epoll", connfd);
                     lept_epoll_add(epfd, connfd, &event);
+                    add_timer(&sys_timers, tmp, DEFAULT_TIMEOUT, lept_http_close_connection);
                 }
             }
             else
@@ -161,7 +169,6 @@ int main(int argc, char **argv)
             }
         }
     }
-    // TODO 释放listenfd所占据的内存资源
     lept_threadpool_destroy(pool, GRACEFUL_SHUTDWON);
     close(listenfd);
     return 0;

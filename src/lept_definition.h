@@ -5,7 +5,7 @@
 #ifndef LEPTSERVER_LEPTDEFINITION_H
 #define LEPTSERVER_LEPTDEFINITION_H
 
-#define LEPTSERVER_VERSION "0.1"  // 程序版本
+#define LEPTSERVER_VERSION "0.11"  // 程序版本
 
 #define MAXLINE 2014
 
@@ -25,7 +25,7 @@
 
 #define HTTP_NOT_FOUND 404
 
-#define DEFAULT_TIMEOUT 500  /* ms */
+#define DEFAULT_TIMEOUT 5000  /* ms */
 
 #define WORKDIR "/home/tang/CLionProjects/LeptServer"
 

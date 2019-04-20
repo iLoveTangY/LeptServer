@@ -7,6 +7,8 @@
 
 #include <stddef.h>
 
+// TODO 基础库不要直接结束程序，而是应该返回错误码
+
 // 比较函数，lhs > rhs 返回 大于0    lhs == rhs 返回0   lhs < rhs 返回小于0
 typedef int (*comparator_t)(const void *lhs, const void *rhs);
 
