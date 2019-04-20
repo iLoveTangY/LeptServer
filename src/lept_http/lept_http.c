@@ -22,8 +22,11 @@
 #include "lept_http.h"
 #include "../lept_utils/lept_utils.h"
 #include "../lept_epoll/lept_epoll.h"
+#include "../lept_timer/lept_timer.h"
 
 #define MIN(x, y) ((x) < (y) ? (x) : (y))
+
+extern lept_server_timers_t sys_timers;
 
 typedef struct mime_type_s
 {
@@ -173,6 +176,7 @@ void process_request(void *argp)
     int fd = request->fd;
     int should_close = 0;
 
+    del_timer(request);  // 从系统定时器中删除
     for (;;)
     {
         debug("Thread %lu reading something...", pthread_self());
@@ -265,7 +269,7 @@ void process_request(void *argp)
                 free(out);
                 break;
             }
-            should_close = 1;  // TODO 由于暂时没加定时器，所以这里需要手动关闭，等于是should_close没有用o(╯□╰)o
+            debug("Keep alive");
             free(out);
         }
         else
@@ -289,6 +293,7 @@ void process_request(void *argp)
         event.events = EPOLLIN | EPOLLET | EPOLLONESHOT;
 
         lept_epoll_mod(request->epfd, request->fd, &event);
+        add_timer(&sys_timers, request, DEFAULT_TIMEOUT, lept_http_close_connection);
     }
 }
 
@@ -683,7 +688,7 @@ int parse_uri(char *uri, int uri_length, char *filename, char *cgiargs)
         strcpy(filename, WORKDIR);
         strcat(filename, uri);
         if (uri[strlen(uri) - 1] == '/')
-            strcat(filename, "home.html");
+            strcat(filename, "index.html");
         return 1;
     }
     else
@@ -700,4 +705,12 @@ int parse_uri(char *uri, int uri_length, char *filename, char *cgiargs)
         strcat(filename, uri);
         return 0;
     }
+}
+
+int lept_http_close_connection(lept_http_request_t *request)
+{
+    if (close(request->fd) != 0)
+        return -1;
+    free(request);
+    return 0;
 }
