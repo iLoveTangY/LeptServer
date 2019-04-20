@@ -9,8 +9,7 @@ cmake .. && make
 ./LeptServer -h
 ```
 
-# ChangeLog
-v0.11：
+# 支持特性
 - [x] 支持`GET`方法
 - [x] 支持Keep-alive
 
