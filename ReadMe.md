@@ -11,8 +11,8 @@ cmake .. && make
 
 # ChangeLog
 v0.11：
-- [x]支持`GET`方法
-- [x]支持Keep-alive
+- [x] 支持`GET`方法
+- [x] 支持Keep-alive
 
 待改进：定时器在多线程环境下可能有问题
 
