@@ -9,7 +9,8 @@
 #include "../lept_http/lept_http.h"
 #include "lept_min_heap.h"
 
-// TODO 考虑定时器是否线程安全？
+// 考虑定时器是否线程安全？
+// 定时器不是线程安全的，需要加锁，后面的版本去做
 
 typedef int (*lept_timer_handler)(lept_http_request_t *);
 

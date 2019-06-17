@@ -14,8 +14,8 @@ v0.11：
 - [x] 支持`GET`方法
 - [x] 支持Keep-alive
 
-待改进：定时器在多线程环境下可能有问题
+**待改进：定时器在多线程环境下需要加锁**
 
-# 关于名称
+# About
 名称来源自[这里](https://zhuanlan.zhihu.com/json-tutorial)。是物理中轻子的英文名称。
 
