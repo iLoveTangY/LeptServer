@@ -22,7 +22,7 @@ void add_one()
     cout << CurrentThreadInfo::get_tid_string() << endl;
     for (int i = 1; i <= 100000; ++i)
     {
-        MutextLockGuard lock(mutex);
+        MutexLockGuard lock(mutex);
         sum++;
     }
 }

@@ -56,25 +56,25 @@ namespace lept_server
     /**
      * RAII手法的封装，禁止拷贝
      */
-    class MutextLockGuard : noncopyable
+    class MutexLockGuard : noncopyable
     {
     private:
         MutexLock &mutex_;
     public:
-        explicit MutextLockGuard(MutexLock &mutex) : mutex_(mutex)
+        explicit MutexLockGuard(MutexLock &mutex) : mutex_(mutex)
         {
             mutex_.lock();
         }
 
         // 析构时自动解锁
-        ~MutextLockGuard()
+        ~MutexLockGuard()
         {
             mutex_.unlock();
         }
     };
 
 // 防止出现未使用变量名定义一个临时变量，加锁又马上解锁的情况发生
-#define MutexLockGurad(x) static_assert(false, "missing mutex gurad var name")
+#define MutexLockGuard(x) static_assert(false, "missing mutex gurad var name")
 }
 
 

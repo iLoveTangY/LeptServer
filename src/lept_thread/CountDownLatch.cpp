@@ -11,14 +11,14 @@ lept_server::CountDownLatch::CountDownLatch(int count)
 
 void lept_server::CountDownLatch::wait()
 {
-    MutextLockGuard lock(mutex_);
+    MutexLockGuard lock(mutex_);
     while (count_ > 0)
         condition_.wait();
 }
 
 void lept_server::CountDownLatch::count_down()
 {
-    MutextLockGuard lock(mutex_);
+    MutexLockGuard lock(mutex_);
     --count_;
     if (count_ == 0)
         condition_.notify_all();
