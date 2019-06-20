@@ -16,7 +16,7 @@ using std::endl;
 using namespace lept_server;
 
 static pthread_once_t once_control = PTHREAD_ONCE_INIT;
-static AsyncLogger *AsyncLogger_;
+AsyncLogger *AsyncLogger_;  // 为了测试日志库的性能，将其设为了非静态，实际使用时使用静态变量较好
 
 
 Logger::LogLevel init_loglevel()
@@ -65,6 +65,7 @@ lept_server::Logger::~Logger()
 {
     const LogStream::Buffer &buf(stream().buffer());
     output(buf.data(), buf.length());
+//    AsyncLogger_->stop();
 }
 
 void Logger::log_time()

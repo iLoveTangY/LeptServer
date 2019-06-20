@@ -31,7 +31,7 @@ namespace lept_server
         {
             running_ = true;
             thread_.start();
-            latch_.wait();  // 其实这里已经不需要了，因为Thread里面已经保证了会启动新的线程之后再返回
+            latch_.wait();
         }
 
         inline void stop()
