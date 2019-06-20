@@ -12,7 +12,7 @@
 #include "FixedSizeBuffer.h"
 #include "Thread.h"
 
-namespace lept_server
+namespace lept_base
 {
     class AsyncLogger : noncopyable
     {

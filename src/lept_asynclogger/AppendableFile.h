@@ -11,7 +11,7 @@
 
 #include "noncopyable.h"
 
-namespace lept_server
+namespace lept_base
 {
     class AppendableFile : noncopyable
     {

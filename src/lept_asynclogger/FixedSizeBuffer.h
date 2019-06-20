@@ -9,7 +9,7 @@
 #include <cstring>
 #include "noncopyable.h"
 
-namespace lept_server
+namespace lept_base
 {
     template<int SIZE>
     class FixedSizeBuffer : noncopyable

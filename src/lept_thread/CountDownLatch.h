@@ -9,7 +9,7 @@
 #include "Condition.h"
 #include "MutexLock.h"
 
-namespace lept_server
+namespace lept_base
 {
     /**
      * 倒计时

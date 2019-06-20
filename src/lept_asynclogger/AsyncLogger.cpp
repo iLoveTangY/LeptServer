@@ -6,7 +6,7 @@
 #include "AsyncLogger.h"
 #include "LogFile.h"
 
-lept_server::AsyncLogger::AsyncLogger(const std::string &filename, int flush_interval)
+lept_base::AsyncLogger::AsyncLogger(const std::string &filename, int flush_interval)
         : flush_interval_(flush_interval),
           running_(false),
           file_name_(filename),
@@ -23,7 +23,7 @@ lept_server::AsyncLogger::AsyncLogger(const std::string &filename, int flush_int
     buffer_ptrs_.reserve(16);
 }
 
-void lept_server::AsyncLogger::append(const char *logline, size_t len)
+void lept_base::AsyncLogger::append(const char *logline, size_t len)
 {
     MutexLockGuard lock(mutex_);
     if (current_buffer_ptr_->avail_size() > len)
@@ -44,7 +44,7 @@ void lept_server::AsyncLogger::append(const char *logline, size_t len)
 /**
  * 后端线程要执行的写入到文件的程序
  */
-void lept_server::AsyncLogger::thread_func()
+void lept_base::AsyncLogger::thread_func()
 {
     assert(running_);
     latch_.count_down();

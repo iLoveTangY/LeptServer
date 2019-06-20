@@ -13,7 +13,7 @@
 using std::cout;
 using std::endl;
 
-using namespace lept_server;
+using namespace lept_base;
 
 static pthread_once_t once_control = PTHREAD_ONCE_INIT;
 AsyncLogger *AsyncLogger_;  // 为了测试日志库的性能，将其设为了非静态，实际使用时使用静态变量较好
@@ -28,7 +28,7 @@ Logger::LogLevel init_loglevel()
 }
 
 // 当前记录日志的最低等级
-Logger::LogLevel lept_server::g_loglevel = init_loglevel();
+Logger::LogLevel lept_base::g_loglevel = init_loglevel();
 
 // 日志文件名
 std::string Logger::log_file_name_ = "log.log";
@@ -61,7 +61,7 @@ Logger::Logger(const char *filename, int line, LogLevel level) : file_name_(file
     stream_ << " -- " << log_level_name[level_] << file_name_ << ":" << line_ << "\n";  // 写入文件名行号等信息
 }
 
-lept_server::Logger::~Logger()
+lept_base::Logger::~Logger()
 {
     const LogStream::Buffer &buf(stream().buffer());
     output(buf.data(), buf.length());

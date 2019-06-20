@@ -9,7 +9,7 @@
 const char digits[] = "9876543210123456789";  // 为了负数时也通用定义成这个样子
 const char *zero = digits + 9;
 
-lept_server::LogStream &lept_server::LogStream::operator<<(double d)
+lept_base::LogStream &lept_base::LogStream::operator<<(double d)
 {
     if (buffer_.avail_size() >= max_numeric_size_)
     {
@@ -19,7 +19,7 @@ lept_server::LogStream &lept_server::LogStream::operator<<(double d)
     return *this;
 }
 
-lept_server::LogStream &lept_server::LogStream::operator<<(long double d)
+lept_base::LogStream &lept_base::LogStream::operator<<(long double d)
 {
     if (buffer_.avail_size() >= max_numeric_size_)
     {

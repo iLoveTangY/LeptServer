@@ -5,7 +5,7 @@
 #ifndef LEPTSERVER_NONCOPYABLE_H
 #define LEPTSERVER_NONCOPYABLE_H
 
-namespace lept_server
+namespace lept_base
 {
     class noncopyable
     {

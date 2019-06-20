@@ -8,7 +8,7 @@
 #include <sys/prctl.h>
 
 using namespace std;
-using namespace lept_server;
+using namespace lept_base;
 
 struct ThreadData
 {
@@ -49,25 +49,25 @@ void *start(void* obj)
 }
 
 
-lept_server::Thread::Thread(const lept_server::Thread::ThreadFunc &func, const std::string &name)
+lept_base::Thread::Thread(const lept_base::Thread::ThreadFunc &func, const std::string &name)
         : started_(false), joined_(false), pthread_id_(0), tid_(0), name_(name), func_(func), latch_(1)
 {
     set_default_name();
 }
 
-void lept_server::Thread::set_default_name()
+void lept_base::Thread::set_default_name()
 {
     if (name_.empty())
         name_ = "LeptThread";
 }
 
-lept_server::Thread::~Thread()
+lept_base::Thread::~Thread()
 {
     if (started_ && !joined_)
         pthread_detach(pthread_id_);
 }
 
-void lept_server::Thread::start()
+void lept_base::Thread::start()
 {
     assert(!started_);
     started_ = true;
@@ -85,7 +85,7 @@ void lept_server::Thread::start()
 }
 
 // 等待创建的线程终止
-int lept_server::Thread::join()
+int lept_base::Thread::join()
 {
     assert(started_);
     assert(!joined_);

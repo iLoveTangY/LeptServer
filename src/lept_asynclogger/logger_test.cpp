@@ -10,7 +10,7 @@
 #include <ctime>
 
 using namespace std;
-using namespace lept_server;
+using namespace lept_base;
 
 extern AsyncLogger *AsyncLogger_;
 

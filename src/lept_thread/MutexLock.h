@@ -8,7 +8,7 @@
 #include "noncopyable.h"
 #include <pthread.h>
 
-namespace lept_server
+namespace lept_base
 {
     /**
      * 不应该直接使用这个类的加锁解锁方法，而应该使用下面的MutextLockGurad类

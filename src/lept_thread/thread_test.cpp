@@ -8,7 +8,7 @@
 #include "MutexLock.h"
 
 using namespace std;
-using namespace lept_server;
+using namespace lept_base;
 
 int sum = 0;
 

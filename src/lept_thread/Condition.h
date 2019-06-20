@@ -11,7 +11,7 @@
 #include "MutexLock.h"
 #include "noncopyable.h"
 
-namespace lept_server
+namespace lept_base
 {
     /**
      * 条件变量的RAII封装

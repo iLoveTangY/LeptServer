@@ -8,7 +8,7 @@
 #include "LogStream.h"
 #include <string>
 
-namespace lept_server
+namespace lept_base
 {
     class Logger
     {
@@ -59,8 +59,8 @@ namespace lept_server
 #define LOG_DEBUG if (lept_server::Logger::loglevel() <= lept_server::Logger::LogLevel::DEBUG) \
 lept_server::Logger(__FILE__, __LINE__, lept_server::Logger::LogLevel::DEBUG).stream()
 
-#define LOG_INFO if (lept_server::Logger::loglevel() <= lept_server::Logger::LogLevel::INFO) \
-lept_server::Logger(__FILE__, __LINE__, lept_server::Logger::LogLevel::INFO).stream()
+#define LOG_INFO if (lept_base::Logger::loglevel() <= lept_base::Logger::LogLevel::INFO) \
+lept_base::Logger(__FILE__, __LINE__, lept_base::Logger::LogLevel::INFO).stream()
 
 #define LOG_WARN if (lept_server::Logger::loglevel() <= lept_server::Logger::LogLevel::WARN) \
 lept_server::Logger(__FILE__, __LINE__, lept_server::Logger::LogLevel::WARN).stream()

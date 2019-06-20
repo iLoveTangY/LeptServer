@@ -39,7 +39,7 @@ size_t convert(char buf[], T value)
     return p - buf;
 }
 
-namespace lept_server
+namespace lept_base
 {
     class LogStream : noncopyable
     {

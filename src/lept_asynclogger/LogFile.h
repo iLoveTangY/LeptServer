@@ -12,7 +12,7 @@
 #include "noncopyable.h"
 #include "MutexLock.h"
 
-namespace lept_server
+namespace lept_base
 {
     class LogFile : noncopyable
     {

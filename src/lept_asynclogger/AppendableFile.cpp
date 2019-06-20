@@ -4,23 +4,23 @@
 
 #include "AppendableFile.h"
 
-lept_server::AppendableFile::AppendableFile(std::string filename)
+lept_base::AppendableFile::AppendableFile(std::string filename)
         : fp_(fopen(filename.c_str(), "ae"))
 {
     setbuffer(fp_, buffer_, sizeof(buffer_));
 }
 
-lept_server::AppendableFile::~AppendableFile()
+lept_base::AppendableFile::~AppendableFile()
 {
     fclose(fp_);
 }
 
-int lept_server::AppendableFile::flush()
+int lept_base::AppendableFile::flush()
 {
     return fflush(fp_);
 }
 
-size_t lept_server::AppendableFile::append(const char *logline, size_t len)
+size_t lept_base::AppendableFile::append(const char *logline, size_t len)
 {
     size_t n = write(logline, len);
     size_t remain = len - n;

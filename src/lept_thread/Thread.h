@@ -14,7 +14,7 @@
 #include <sys/syscall.h>
 #include <unistd.h>
 
-namespace lept_server
+namespace lept_base
 {
     /**
      * 线程类的封装，会创建一个新的线程来执行指定的函数
