@@ -56,17 +56,17 @@ namespace lept_base
         LogLevel level_;
     };
 
-#define LOG_DEBUG if (lept_server::Logger::loglevel() <= lept_server::Logger::LogLevel::DEBUG) \
-lept_server::Logger(__FILE__, __LINE__, lept_server::Logger::LogLevel::DEBUG).stream()
+#define LOG_DEBUG if (lept_base::Logger::loglevel() <= lept_base::Logger::LogLevel::DEBUG) \
+lept_base::Logger(__FILE__, __LINE__, lept_base::Logger::LogLevel::DEBUG).stream()
 
 #define LOG_INFO if (lept_base::Logger::loglevel() <= lept_base::Logger::LogLevel::INFO) \
 lept_base::Logger(__FILE__, __LINE__, lept_base::Logger::LogLevel::INFO).stream()
 
-#define LOG_WARN if (lept_server::Logger::loglevel() <= lept_server::Logger::LogLevel::WARN) \
-lept_server::Logger(__FILE__, __LINE__, lept_server::Logger::LogLevel::WARN).stream()
+#define LOG_WARN if (lept_base::Logger::loglevel() <= lept_base::Logger::LogLevel::WARN) \
+lept_base::Logger(__FILE__, __LINE__, lept_base::Logger::LogLevel::WARN).stream()
 
-#define LOG_ERROR if (lept_server::Logger::loglevel() <= lept_server::Logger::LogLevel::ERROR) \
-lept_server::Logger(__FILE__, __LINE__, lept_server::Logger::LogLevel::ERROR).stream()
+#define LOG_ERROR if (lept_base::Logger::loglevel() <= lept_base::Logger::LogLevel::ERROR) \
+lept_base::Logger(__FILE__, __LINE__, lept_base::Logger::LogLevel::ERROR).stream()
 
     extern Logger::LogLevel g_loglevel;  // 当前记录日志的最低等级
 
