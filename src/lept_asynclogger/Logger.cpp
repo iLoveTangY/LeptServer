@@ -10,9 +10,6 @@
 #include <sys/time.h>
 #include <iostream>
 
-using std::cout;
-using std::endl;
-
 using namespace lept_base;
 
 static pthread_once_t once_control = PTHREAD_ONCE_INIT;

@@ -4,10 +4,14 @@ project(LeptServer)
 set(CXX_FLAGS -g -Wall -std=c++11 -D_PTHREADS -Wno-unused-parameter)
 
 set(CMAKE_CXX_COMPILER "g++")
-set(CMAKE_CXX_FLAGS_DEBUG  "-O0")
+#set(CMAKE_CXX_FLAGS_DEBUG  "-O0")
 
 set(THREAD_DIR src/lept_thread)
-set(THREAD_TEST_SRCS ${THREAD_DIR}/thread_test.cpp ${THREAD_DIR}/CountDownLatch.cpp ${THREAD_DIR}/Thread.cpp src/lept_thread/CurrentThreadInfo.cpp)
+set(THREAD_TEST_SRCS
+        ${THREAD_DIR}/thread_test.cpp
+        ${THREAD_DIR}/CountDownLatch.cpp
+        ${THREAD_DIR}/Thread.cpp
+        ${THREAD_DIR}/CurrentThreadInfo.cpp)
 
 include_directories(src/lept_utils src/lept_thread src/lept_asynclogger)
 
@@ -21,10 +25,38 @@ set(LOGGER_TEST_SRCS
         ${LOGGER_DIR}/LogStream.cpp
         ${LOGGER_DIR}/AsyncLogger.cpp
         ${LOGGER_DIR}/Logger.cpp
-        ${THREAD_DIR}/CountDownLatch.cpp ${THREAD_DIR}/Thread.cpp src/lept_thread/CurrentThreadInfo.cpp)
+        ${THREAD_DIR}/CountDownLatch.cpp
+        ${THREAD_DIR}/Thread.cpp
+        ${THREAD_DIR}/CurrentThreadInfo.cpp)
 
 add_executable(logger_test ${LOGGER_TEST_SRCS})
+
+set(SRCS src/EventLoop.cpp
+        src/Timer.cpp
+        src/HttpData.cpp
+        src/Channel.cpp
+        src/Epoll.cpp
+        src/lept_utils/Utils.cpp
+        src/EventLoopThread.cpp
+        src/EventLoopThreadPool.cpp
+        src/Server.cpp
+        src/Main.cpp
+        ${LOGGER_DIR}/AppendableFile.cpp
+        ${LOGGER_DIR}/LogFile.cpp
+        ${LOGGER_DIR}/LogStream.cpp
+        ${LOGGER_DIR}/AsyncLogger.cpp
+        ${LOGGER_DIR}/Logger.cpp
+        ${THREAD_DIR}/CountDownLatch.cpp
+        ${THREAD_DIR}/Thread.cpp
+        ${THREAD_DIR}/CurrentThreadInfo.cpp
+        ${THREAD_DIR}/CountDownLatch.cpp
+        ${THREAD_DIR}/Thread.cpp
+        ${THREAD_DIR}/CurrentThreadInfo.cpp)
+
+add_executable(lept_server ${SRCS})
 
 target_link_libraries(thread_test pthread)
 
 target_link_libraries(logger_test pthread)
+
+target_link_libraries(lept_server pthread)

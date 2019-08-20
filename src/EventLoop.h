@@ -40,16 +40,16 @@ namespace lept_server
             assert(is_in_loopthread());
         }
 
-        inline void remove_from_poller(std::shared_ptr<Channel> channel);
+        void remove_from_poller(std::shared_ptr<Channel> channel);
 
-        inline void update_poller(std::shared_ptr<Channel> channel, int timeout = 0);
+        void update_poller(std::shared_ptr<Channel> channel, int timeout = 0);
 
-        inline void add_to_poller(std::shared_ptr<Channel> channel, int timeout = 0);
+        void add_to_poller(std::shared_ptr<Channel> channel, int timeout = 0);
 
     private:
         void wakeup();
         void do_pending_functors();
-        // handle_read和handle_connection是wake_up_fd的处理函数
+        // handle_read和handle_connection是wake_up_fd绑定到Channel中的处理函数
         void handle_read();
         void handle_connection();
 

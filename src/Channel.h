@@ -35,7 +35,7 @@ namespace lept_server
             fd_ = fd;
         }
 
-        void set_holder(std::shared_ptr<HttpData> holder)
+        void set_holder(const std::shared_ptr<HttpData> &holder)
         {
             holder_ = holder;
         }

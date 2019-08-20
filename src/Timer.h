@@ -51,8 +51,8 @@ namespace lept_server
     class TimerManager
     {
     public:
-        TimerManager();
-        ~TimerManager();
+        TimerManager() = default;
+        ~TimerManager() = default;
         void addTimer(std::shared_ptr<HttpData> http_data, int timeout);
         void handle_expired();
 

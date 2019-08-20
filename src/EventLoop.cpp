@@ -39,7 +39,7 @@ lept_server::EventLoop::EventLoop()
           thread_id_(CurrentThreadInfo::tid()),
           p_wakeup_channel_(new Channel(this, wakeup_fd_))
 {
-    if (loop_in_this_thread == nullptr)
+    if (loop_in_this_thread != nullptr)
     {
         LOG_ERROR << "Another EventLoop in current thread\n";
         abort();
@@ -160,5 +160,8 @@ void lept_server::EventLoop::handle_read()
 
 void lept_server::EventLoop::handle_connection()
 {
+    // 我觉得这里并不会有什么效果，因为前后两次注册的事件相同..
+    // 由于wake_up_fd并没有采用EPOLLONESHOT，因此，这里的update_poller是不必要的
+    // TODO 这里可以把update_poller删掉？
     update_poller(p_wakeup_channel_, 0);
 }
